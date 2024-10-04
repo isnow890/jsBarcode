@@ -69,29 +69,46 @@
       위에 표시된 사번이 본인의 사번이 맞는지 확인해주시고<br />스캔해주세요.
     </p>
     <script>
-      function generateBarcode(barcode) {
+      const generateBarcode = (barcode) => {
         JsBarcode("#barcode", barcode, {
           format: "CODE39",
           width: 2,
           height: 80,
           displayValue: true,
         });
-      }
+      };
 
-      function getQueryParam(param) {
+      const decodeBase64 = (str) => {
+        try {
+          return atob(str);
+        } catch (e) {
+          console.error("Base64 디코딩 오류:", e);
+          return null;
+        }
+      };
+
+      const getQueryParam = (param) => {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
-      }
+      };
 
       window.onload = () => {
-        const stfNo = getQueryParam("stfNo");
-        if (stfNo) {
-          generateBarcode(stfNo);
-          document.getElementById("title").textContent = `${stfNo}님의 바코드`;
+        const titleElement = document.querySelector("#title");
+        const barcodeElement = document.querySelector("#barcode");
+
+        const encodedStfNo = getQueryParam("stfNo");
+        if (encodedStfNo) {
+          const decodedStfNo = decodeBase64(encodedStfNo);
+          if (decodedStfNo) {
+            generateBarcode(decodedStfNo);
+            titleElement.textContent = `${decodedStfNo}님의 바코드`;
+          } else {
+            titleElement.textContent = "올바르지 않은 사번 형식입니다.";
+            barcodeElement.style.display = "none";
+          }
         } else {
-          document.getElementById("title").textContent =
-            "사번이 제공되지 않았습니다.";
-          document.getElementById("barcode").style.display = "none";
+          titleElement.textContent = "사번이 제공되지 않았습니다.";
+          barcodeElement.style.display = "none";
         }
       };
     </script>
