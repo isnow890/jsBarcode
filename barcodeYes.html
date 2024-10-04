@@ -136,11 +136,13 @@
         const barcodeElement = document.querySelector("#barcode");
 
         const encodedStfNo = getQueryParam("stfNo");
+        const encodedStfNm = getQueryParam("stfNm");
         if (encodedStfNo) {
           const decodedStfNo = decodeBase64(encodedStfNo);
+          const decodedStfNm = decodeBase64(encodedStfNm);
           if (decodedStfNo) {
             generateBarcode(decodedStfNo);
-            titleElement.textContent = `${decodedStfNo}님의 바코드`;
+            titleElement.textContent = `${decodedStfNm} (${decodedStfNo})님의 바코드`;
           } else {
             titleElement.textContent = "올바르지 않은 사번 형식입니다.";
             barcodeElement.style.display = "none";
