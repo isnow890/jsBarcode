@@ -101,9 +101,7 @@
     <hr class="divider" />
     <h3 id="title"></h3>
     <svg id="barcode"></svg>
-    <p class="ins">
-      위에 표시된 사번이 본인의 사번이 맞는지 확인해주시고 스캔해주세요.
-    </p>
+    <p class="ins"></p>
     <footer>
       <p>&copy; 2024 식단봇. All rights reserved.</p>
     </footer>
@@ -138,7 +136,7 @@
       window.onload = () => {
         const titleElement = document.querySelector("#title");
         const barcodeElement = document.querySelector("#barcode");
-
+        const info = document.querySelector(".ins");
         const encodedStfNo = getQueryParam("stfNo");
         const encodedStfNm = getQueryParam("stfNm");
         if (encodedStfNo) {
@@ -147,6 +145,8 @@
           if (decodedStfNo) {
             generateBarcode(decodedStfNo);
             titleElement.textContent = `${decodedStfNm} (${decodedStfNo})님의 바코드`;
+            info.textContent =
+              "위에 표시된 사번이 본인의 사번이 맞는지 확인해주시고 스캔해주세요.";
           } else {
             titleElement.textContent = "올바르지 않은 사번 형식입니다.";
             barcodeElement.style.display = "none";
