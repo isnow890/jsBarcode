@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>바코드 생성</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+      }
+      input,
+      button {
+        margin: 10px 0;
+        padding: 5px;
+      }
+      .logo-container {
+        width: 15em;
+        height: 7em;
+        background-color: white;
+        border-radius: 10px;
+      }
+      .ins {
+        font-weight: bold;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logo-container">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200">
+        <!-- 로봇 얼굴 -->
+        <rect x="20" y="40" width="120" height="120" rx="20" fill="#4a90e2" />
+        <circle cx="55" cy="80" r="15" fill="white" />
+        <circle cx="105" cy="80" r="15" fill="white" />
+        <rect x="50" y="120" width="60" height="10" rx="5" fill="white" />
+
+        <!-- 안테나 -->
+        <line
+          x1="80"
+          y1="40"
+          x2="80"
+          y2="10"
+          stroke="#4a90e2"
+          stroke-width="6"
+        />
+        <circle cx="80" cy="5" r="5" fill="#4a90e2" />
+
+        <!-- 텍스트 "식단봇" -->
+        <text
+          x="160"
+          y="120"
+          font-family="Arial, sans-serif"
+          font-size="48"
+          font-weight="bold"
+          fill="#333333"
+        >
+          식단봇
+        </text>
+      </svg>
+    </div>
+    <h2 id="title"></h2>
+    <svg id="barcode"></svg>
+    <p class="ins">
+      위에 표시된 사번이 본인의 사번이 맞는지 확인해주시고<br />스캔해주세요.
+    </p>
+    <script>
+      function generateBarcode(barcode) {
+        JsBarcode("#barcode", barcode, {
+          format: "CODE39",
+          width: 2,
+          height: 80,
+          displayValue: true,
+        });
+      }
+
+      function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+      }
+
+      window.onload = () => {
+        const stfNo = getQueryParam("stfNo");
+        if (stfNo) {
+          generateBarcode(stfNo);
+          document.getElementById("title").textContent = `${stfNo}님의 바코드`;
+        } else {
+          document.getElementById("title").textContent =
+            "사번이 제공되지 않았습니다.";
+          document.getElementById("barcode").style.display = "none";
+        }
+      };
+    </script>
+  </body>
+</html>
